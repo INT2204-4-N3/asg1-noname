@@ -5,9 +5,9 @@ package uet.oop.bomberman.graphics;
  */
 public class Sprite {
 	
-	public final int SIZE;
+	public final int SIZE; // SIZE = 16, each sprite is an 16x16 pixels image
 	private int _x, _y;
-	public int[] _pixels;
+	public int[] _pixels; // contains pixels of the sprite
 	protected int _realWidth;
 	protected int _realHeight;
 	private SpriteSheet _sheet;

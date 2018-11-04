@@ -12,7 +12,7 @@ public abstract class Entity implements IRender {
 
 	protected double _x, _y; // tọa độ của thực thể entity
 	protected boolean _removed = false; // khi đối tượng bị loại => true
-	protected Sprite _sprite;
+	protected Sprite _sprite; // _sprite lưu trữ thông tin pixels của tất cả các sprite
 
 	/**
 	 * Phương thức này được gọi liên tục trong vòng lặp game,

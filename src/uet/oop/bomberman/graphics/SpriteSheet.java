@@ -15,7 +15,7 @@ public class SpriteSheet {
 	public final int SIZE; // 256
 	public int[] _pixels; // 256 * 256 pixels
 	
-	public static SpriteSheet tiles = new SpriteSheet("/textures/classic.png", 256);
+	public static SpriteSheet tiles = new SpriteSheet("/textures/classic.png", 256); // an unique object "tiles"
 	
 	public SpriteSheet(String path, int size) {
 		_path = path;
