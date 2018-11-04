@@ -12,7 +12,7 @@ public abstract class Character extends AnimatedEntitiy {
 	
 	protected Board _board;
 	protected int _direction = -1;
-	protected boolean _alive = true;
+	protected boolean _alive = true; // character còn "sống => true
 	protected boolean _moving = false;
 	public int _timeAfter = 40;
 	

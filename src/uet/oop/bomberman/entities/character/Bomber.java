@@ -14,7 +14,7 @@ import java.util.List;
 public class Bomber extends Character {
 
     private List<Bomb> _bombs;
-    protected Keyboard _input;
+    protected Keyboard _input; // xử lý sự kiện từ bàn phím
 
     /**
      * nếu giá trị này < 0 thì cho phép đặt đối tượng Bomb tiếp theo,
