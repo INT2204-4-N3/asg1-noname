@@ -26,7 +26,7 @@ public class Bomber extends Character {
         super(x, y, board);
         _bombs = _board.getBombs();
         _input = _board.getInput();
-        _sprite = Sprite.player_right;
+        _sprite = Sprite.player_right; // the player is going to move to the right direction by default
     }
 
     @Override
@@ -47,6 +47,7 @@ public class Bomber extends Character {
         detectPlaceBomb();
     }
 
+    // Change the sprite character state in period
     @Override
     public void render(Screen screen) {
         calculateXOffset();
@@ -54,7 +55,7 @@ public class Bomber extends Character {
         if (_alive)
             chooseSprite();
         else
-            _sprite = Sprite.player_dead1;
+            _sprite = Sprite.player_dead1; // load dead sprite
 
         screen.renderEntity((int) _x, (int) _y - _sprite.SIZE, this);
     }
@@ -111,18 +112,53 @@ public class Bomber extends Character {
     protected void calculateMove() {
         // TODO: xử lý nhận tín hiệu điều khiển hướng đi từ _input và gọi move() để thực hiện di chuyển
         // TODO: nhớ cập nhật lại giá trị cờ _moving khi thay đổi trạng thái di chuyển
+        int xa = 0, ya = 0; // bomber is standing, not moving
+        if(_input.left) {
+            xa--;
+        }
+        if(_input.right) {
+            xa++;
+        }
+        if(_input.up) {
+            ya--;
+        }
+        if(_input.down) {
+            ya++;
+        }
+        if (xa != 0 || ya != 0) {
+            _moving = true;
+            move(xa * Game.getBomberSpeed(), ya * Game.getBomberSpeed());
+        } else {
+            _moving = false;
+        }
     }
 
     @Override
     public boolean canMove(double x, double y) {
         // TODO: kiểm tra có đối tượng tại vị trí chuẩn bị di chuyển đến và có thể di chuyển tới đó hay không
-        return false;
+        return true;
     }
 
     @Override
     public void move(double xa, double ya) {
         // TODO: sử dụng canMove() để kiểm tra xem có thể di chuyển tới điểm đã tính toán hay không và thực hiện thay đổi tọa độ _x, _y
         // TODO: nhớ cập nhật giá trị _direction sau khi di chuyển
+        if(true) {
+            if(xa > 0) {
+                _direction = 1; //right
+            }
+            if(xa < 0) {
+                _direction = 3; //left
+            }
+            if(ya > 0) {
+                _direction = 2; //down
+            }
+            if(ya < 0) {
+                _direction = 0; //up
+            }
+            _x += xa;
+            _y += ya;
+        }
     }
 
     @Override

@@ -12,6 +12,10 @@ import uet.oop.bomberman.exceptions.LoadLevelException;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.io.*;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
 public class FileLevelLoader extends LevelLoader {
 
 	/**
@@ -28,6 +32,49 @@ public class FileLevelLoader extends LevelLoader {
 	public void loadLevel(int level) {
 		// TODO: đọc dữ liệu từ tệp cấu hình /levels/Level{level}.txt
 		// TODO: cập nhật các giá trị đọc được vào _width, _height, _level, _map
+
+		Scanner input = new Scanner(System.in);
+		// Open the config map file
+		FileReader fd = null;
+		BufferedReader buf = null;
+		String line = null;
+		try {
+			switch (level) {
+				case 1:
+					File l1 = new File("res\\levels\\Level1.txt");
+					fd = new FileReader(l1);
+					buf = new BufferedReader(fd);
+			}
+
+
+			line = buf.readLine();
+			StringTokenizer token = new StringTokenizer(line);
+			_level = Integer.parseInt(token.nextToken());
+			_height = Integer.parseInt(token.nextToken());
+			_width = Integer.parseInt(token.nextToken());
+			System.out.print(_level);
+			System.out.print(_height);
+			System.out.print(_width);
+
+			_map = new char[_height][_width];
+
+
+			for(int i = 0; i < _height; i++) {
+				_map[i] = buf.readLine().toCharArray();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (fd != null) {
+				try {
+					fd.close();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -38,6 +85,7 @@ public class FileLevelLoader extends LevelLoader {
 		// TODO: phần code mẫu ở dưới để hướng dẫn cách thêm các loại Entity vào game
 		// TODO: hãy xóa nó khi hoàn thành chức năng load màn chơi từ tệp cấu hình
 		// thêm Wall
+		/*
 		for (int x = 0; x < 20; x++) {
 			for (int y = 0; y < 20; y++) {
 				int pos = x + y * _width;
@@ -74,7 +122,7 @@ public class FileLevelLoader extends LevelLoader {
 					new SpeedItem(xI, yI, Sprite.powerup_flames),
 					new Brick(xI, yI, Sprite.brick)
 				)
-		);
+		);*/
 	}
 
 }
