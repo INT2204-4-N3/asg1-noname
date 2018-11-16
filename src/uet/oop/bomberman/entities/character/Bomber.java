@@ -136,6 +136,11 @@ public class Bomber extends Character {
     @Override
     public boolean canMove(double x, double y) {
         // TODO: kiểm tra có đối tượng tại vị trí chuẩn bị di chuyển đến và có thể di chuyển tới đó hay không
+
+        Entity e = _board.getEntity(x, y, this); // return obj is near the character. obj can be all the entities, exclude the character
+        if(collide(e)) {
+            return false;
+        }
         return true;
     }
 
@@ -165,6 +170,8 @@ public class Bomber extends Character {
     public boolean collide(Entity e) {
         // TODO: xử lý va chạm với Flame
         // TODO: xử lý va chạm với Enemy
+
+
 
         return true;
     }
