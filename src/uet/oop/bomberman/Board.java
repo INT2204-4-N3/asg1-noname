@@ -17,6 +17,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Quản lý thao tác điều khiển, load level, render các màn hình của game
@@ -26,13 +27,14 @@ public class Board implements IRender {
 	protected Game _game;
 	protected Keyboard _input;
 	protected Screen _screen;
+	protected int _levels;
 	
 	public Entity[] _entities;
 	public List<Character> _characters = new ArrayList<>();
 	protected List<Bomb> _bombs = new ArrayList<>();
 	private List<Message> _messages = new ArrayList<>();
 	
-	private int _screenToShow = -1; //1:endgame, 2:changelevel, 3:paused
+	private int _screenToShow = -1; //1:endgame, 2:changelevel, 3:paused, 4: phá đảo
 	
 	private int _time = Game.TIME;
 	private int _points = Game.POINTS;
@@ -41,7 +43,8 @@ public class Board implements IRender {
 		_game = game;
 		_input = input;
 		_screen = screen;
-		
+		_levels = Game.LEVELS;
+
 		loadLevel(1); //start in level 1
 	}
 	
@@ -83,12 +86,25 @@ public class Board implements IRender {
 	}
 	
 	public void nextLevel() {
-		loadLevel(_levelLoader.getLevel() + 1);
+	    int level = _levelLoader.getLevel() + 1;
+        if(level > _levels) {
+        	//System.out.println("call win()");
+            win();
+            loadLevel(1);
+            return;
+        }
+	    loadLevel(level);
 	}
 	
 	public void loadLevel(int level) {
+
 		_time = Game.TIME;
 		_screenToShow = 2;
+		/*if(level > _levels) {
+		    _screenToShow = 4;
+		    level = 1;
+        }*/
+
 		_game.resetScreenDelay();
 		_game.pause();
 		_characters.clear();
@@ -104,6 +120,12 @@ public class Board implements IRender {
 			endGame();
 		}
 	}
+
+	public void win() {
+        _screenToShow = 4;
+        _game.resetScreenDelay();
+        _game.pause();
+    }
 	
 	protected void detectEndGame() {
 		if(_time <= 0)
@@ -127,16 +149,22 @@ public class Board implements IRender {
 	}
 	
 	public void drawScreen(Graphics g) {
+	    //System.out.println(_screenToShow);
 		switch (_screenToShow) {
 			case 1:
 				_screen.drawEndGame(g, _points);
 				break;
 			case 2:
 				_screen.drawChangeLevel(g, _levelLoader.getLevel());
+				//System.out.println("Changed");
 				break;
 			case 3:
 				_screen.drawPaused(g);
 				break;
+            case 4:
+                _screen.drawWin(g);
+                System.out.println("won");
+                break;
 		}
 	}
 	

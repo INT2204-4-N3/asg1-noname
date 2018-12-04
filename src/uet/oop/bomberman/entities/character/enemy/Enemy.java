@@ -3,11 +3,14 @@ package uet.oop.bomberman.entities.character.enemy;
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.LayeredEntity;
 import uet.oop.bomberman.entities.Message;
+import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.character.enemy.ai.AI;
+import uet.oop.bomberman.entities.character.enemy.ai.AILow;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.level.Coordinates;
@@ -40,6 +43,7 @@ public abstract class Enemy extends Character {
 		
 		_timeAfter = 20;
 		_deadSprite = dead;
+		_ai = new AILow();
 	}
 	
 	@Override
@@ -79,6 +83,28 @@ public abstract class Enemy extends Character {
 		// TODO: sử dụng canMove() để kiểm tra xem có thể di chuyển tới điểm đã tính toán hay không
 		// TODO: sử dụng move() để di chuyển
 		// TODO: nhớ cập nhật lại giá trị cờ _moving khi thay đổi trạng thái di chuyển
+        double xa = 0, ya = 0;
+		//_direction = _ai.calculateDirection();
+		// direction must be only calculate after move through title
+        // if enemy has stepped all allowed steps, then re-calculate direction and reset _steps
+        if(_steps <= 0) {
+            _direction = _ai.calculateDirection();
+            _steps = MAX_STEPS;
+        }
+
+		if(_direction == 0) ya--;
+		if(_direction == 1) xa++;
+		if(_direction == 2) ya++;
+		if(_direction == 3) xa--;
+		if(canMove(xa, ya)) {
+		    move(xa * _speed, ya * _speed);
+		    _steps -= 1 + rest;
+		    _moving = true;
+        } else {
+		    // reset steps to zero to re-calculate direction
+            _steps = 0;
+		    _moving = false;
+        }
 	}
 	
 	@Override
@@ -91,13 +117,35 @@ public abstract class Enemy extends Character {
 	@Override
 	public boolean canMove(double x, double y) {
 		// TODO: kiểm tra có đối tượng tại vị trí chuẩn bị di chuyển đến và có thể di chuyển tới đó hay không
-		return false;
+		for(int i = 0; i < 4; i++) {
+
+			double xt = (_x + x + i % 2 * 11) / Game.TILES_SIZE;
+			double yt = ((_y + y) + i / 2 * 12 - 13) / Game.TILES_SIZE;
+			Entity e = _board.getEntity(xt, yt, null); // return obj is near the character. obj can be all the entities, exclude the character
+
+			if(!collide(e)) { // collide = false means can't move through
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public boolean collide(Entity e) {
 		// TODO: xử lý va chạm với Flame
+		if(e instanceof  Flame) {
+		    kill();
+        }
 		// TODO: xử lý va chạm với Bomber
+        if(e instanceof Bomber) {
+            ((Bomber) e).kill();
+        }
+        if(e instanceof  LayeredEntity) {
+            return e.collide(this);
+        }
+        if(e instanceof Bomb) {
+        	return false;
+		}
 		return true;
 	}
 	

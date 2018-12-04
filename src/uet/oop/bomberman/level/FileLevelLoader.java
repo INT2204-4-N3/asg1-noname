@@ -44,13 +44,16 @@ public class FileLevelLoader extends LevelLoader {
 		BufferedReader buf = null;
 		String line = null;
 		try {
-			switch (level) {
+			/*switch (level) {
 				case 1:
 					File l1 = new File("res\\levels\\Level1.txt");
 					fd = new FileReader(l1);
 					buf = new BufferedReader(fd);
-			}
+			}*/
 
+			File l = new File("res\\levels\\Level" + Integer.toString(level) + ".txt");
+			fd = new FileReader(l);
+			buf = new BufferedReader(fd);
 
 			line = buf.readLine();
 			StringTokenizer token = new StringTokenizer(line);
@@ -99,7 +102,9 @@ public class FileLevelLoader extends LevelLoader {
 				int pos = x + y * _width;
 				switch (_map[y][x]) {
 					case '#':
-						_board.addEntity(pos, new Wall(x, y, Sprite.wall));
+						_board.addEntity(pos, new LayeredEntity(x, y,
+								new Grass(x, y, Sprite.grass),
+								new Wall(x, y, Sprite.wall)));
 						break;
 					case '*':
 						//int xB = 3, yB = 1;
@@ -114,7 +119,7 @@ public class FileLevelLoader extends LevelLoader {
 						_board.addEntity(x + y * _width,
 								new LayeredEntity(x, y,
 										new Grass(x, y, Sprite.grass),
-										new Portal(x, y, Sprite.portal),
+										new Portal(x, y, Sprite.portal, _board),
 										new Brick(x, y, Sprite.brick)
 								)
 						);
@@ -163,8 +168,8 @@ public class FileLevelLoader extends LevelLoader {
 						break;
 
 					default:
-						Sprite sprite = y == 0 || x == 0 || x == 10 || y == 10 ? Sprite.wall : Sprite.grass;
-						_board.addEntity(pos, new Grass(x, y, sprite));
+						//Sprite sprite = y == 0 || x == 0 || x == 10 || y == 10 ? Sprite.wall : Sprite.grass;
+						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
 						break;
 				}
 			}

@@ -1,5 +1,6 @@
 package uet.oop.bomberman.entities;
 
+import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.tile.destroyable.DestroyableTile;
 import uet.oop.bomberman.graphics.Screen;
 
@@ -32,12 +33,12 @@ public class LayeredEntity extends Entity {
 		clearRemoved();
 		getTopEntity().update();
 	}
-	
+
 	@Override
 	public void render(Screen screen) {
 		getTopEntity().render(screen);
 	}
-	
+
 	public Entity getTopEntity() {
 		
 		return _entities.getLast();
@@ -58,7 +59,7 @@ public class LayeredEntity extends Entity {
 	@Override
 	public boolean collide(Entity e) {
 		// TODO: lấy entity trên cùng ra để xử lý va chạm
-		return false;
+        return getTopEntity().collide(e);
 	}
 
 }

@@ -1,8 +1,11 @@
 package uet.oop.bomberman.entities.bomb;
 
 import uet.oop.bomberman.Board;
+import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.AnimatedEntitiy;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.character.enemy.Enemy;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -75,8 +78,25 @@ public class Bomb extends AnimatedEntitiy {
 		_exploded = true;
 		
 		// TODO: xử lý khi Character đứng tại vị trí Bomb
-		
+		Character e = _board.getCharacterAtExcluding((int)_x, (int)_y, null);
+		if(e != null) {
+			((Character) e).kill();
+		}
+
+		/* //null pointer
+		Entity e1 = _board.getEntity(_x, _y, null);
+		if(e1 != null && e1 instanceof Enemy) {
+			((Enemy) e1).kill();
+		}*/
+
 		// TODO: tạo các Flame
+		_flames = new Flame[4];
+		for(int i = 0; i < 4; i++) {
+			int x = (int)_x;
+			int y = (int)_y;
+			_flames[i] = new Flame(x , y, i, Game.getBombRadius(), _board);
+		}
+		//_timeToExplode = 0; // 2 bombs explode at the same time
 	}
 	
 	public FlameSegment flameAt(int x, int y) {
@@ -94,7 +114,16 @@ public class Bomb extends AnimatedEntitiy {
 	@Override
 	public boolean collide(Entity e) {
         // TODO: xử lý khi Bomber đi ra sau khi vừa đặt bom (_allowedToPassThru)
+
         // TODO: xử lý va chạm với Flame của Bomb khác
+		if(e instanceof  Flame && !_exploded) { // remove !_exploded => stackoverflow
+			explode();
+			return true;
+		}
+		/*
+		if(e instanceof Enemy) {
+			return false;
+		}*/
         return false;
 	}
 }

@@ -2,6 +2,8 @@ package uet.oop.bomberman.entities.bomb;
 
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.tile.destroyable.DestroyableTile;
 import uet.oop.bomberman.graphics.Screen;
 
 public class Flame extends Entity {
@@ -27,6 +29,7 @@ public class Flame extends Entity {
 		_direction = direction;
 		_radius = radius;
 		_board = board;
+
 		createFlameSegments();
 	}
 
@@ -42,9 +45,30 @@ public class Flame extends Entity {
 		/**
 		 * biến last dùng để đánh dấu cho segment cuối cùng
 		 */
-		boolean last;
+		boolean last = false;
+		int n = _flameSegments.length;
 
 		// TODO: tạo các segment dưới đây
+		for(int i = 0; i < n; i++) {
+			if(i == n - 1) {
+				last = true;
+			}
+			switch (_direction) {
+				case 0: // up
+					_flameSegments[i] = new FlameSegment((int)_x, (int)_y - 1 - i, _direction, last);
+					break;
+				case 1: // right
+					_flameSegments[i] = new FlameSegment((int)_x + 1 + i, (int)_y, _direction, last);
+					break;
+				case 2: // down
+					_flameSegments[i] = new FlameSegment((int)_x, (int)_y + 1 + i, _direction, last);
+					break;
+				case 3: // left
+					_flameSegments[i] = new FlameSegment((int)_x - 1 - i, (int)_y, _direction, last);
+					break;
+			}
+
+		}
 	}
 
 	/**
@@ -53,7 +77,24 @@ public class Flame extends Entity {
 	 */
 	private int calculatePermitedDistance() {
 		// TODO: thực hiện tính toán độ dài của Flame
-		return 1;
+		int length = 0;
+		Entity e;
+		int x = xOrigin;
+		int y = yOrigin;
+
+		while(length <= _radius - 1) {
+			if(_direction == 0) y--;
+			if(_direction == 1) x++;
+			if(_direction == 2) y++;
+			if(_direction == 3) x--;
+			e = _board.getEntity(x, y, null);
+			if(!e.collide(this)) {
+				//if(e instanceof DestroyableTile) length++;
+				break;
+			}
+			length++;
+		}
+		return length;
 	}
 	
 	public FlameSegment flameSegmentAt(int x, int y) {
@@ -77,6 +118,9 @@ public class Flame extends Entity {
 	@Override
 	public boolean collide(Entity e) {
 		// TODO: xử lý va chạm với Bomber, Enemy. Chú ý đối tượng này có vị trí chính là vị trí của Bomb đã nổ
+		if(e instanceof Character) {
+			((Character) e).kill();
+		}
 		return true;
 	}
 }

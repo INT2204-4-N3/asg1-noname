@@ -101,6 +101,7 @@ public class Screen {
 	}
 
 	public void drawChangeLevel(Graphics g, int level) {
+		//System.out.println("Change level");
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getRealWidth(), getRealHeight());
 		
@@ -109,6 +110,18 @@ public class Screen {
 		g.setColor(Color.white);
 		drawCenteredString("LEVEL " + level, getRealWidth(), getRealHeight(), g);
 		
+	}
+
+	public void drawWin(Graphics g) {
+		System.out.println("win");
+
+		g.setColor(Color.black);
+		g.fillRect(0, 0, getRealWidth(), getRealHeight());
+
+		Font font = new Font("Arial", Font.PLAIN, 20 * Game.SCALE);
+		g.setFont(font);
+		g.setColor(Color.white);
+		drawCenteredString("You win", getRealWidth(), getRealHeight(), g);
 	}
 	
 	public void drawPaused(Graphics g) {
